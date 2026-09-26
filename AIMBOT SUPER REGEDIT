@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel Admin</title>
+<style>
+body{font-family:sans-serif;background:#f5f5f5;padding:20px}
+.login,.panel{background:white;padding:20px;border-radius:10px;max-width:400px;margin:auto}
+input{width:100%;padding:10px;margin:8px 0;box-sizing:border-box}
+button{width:100%;padding:10px;background:#25D366;color:white;border:none;border-radius:5px}
+.hidden{display:none}
+.menu button{margin:5px 0;background:#128C7E}
+hr{margin:15px 0}
+</style>
+</head>
+<body>
+
+<div class="login hidden" id="loginBox">
+<h3>Login Admin</h3>
+<input id="user" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
+<button onclick="login()">Masuk</button>
+</div>
+
+<div class="panel hidden" id="panelBox">
+<h3>Panel Admin</h3>
+<div class="menu">
+<button onclick="alert('Broadcast')">Kirim Broadcast</button>
+<button onclick="alert('Statistik')">Lihat Statistik</button>
+</div>
+<hr>
+<h4>Ganti Password</h4>
+<input id="oldPass" type="password" placeholder="Password lama">
+<input id="newPass" type="password" placeholder="Password baru">
+<button onclick="gantiPass()" style="background:#f0ad4e">Ganti Password</button>
+<hr>
+<button onclick="logout()" style="background:#d9534f">Logout</button>
+<button onclick="resetAll()" style="background:gray;margin-top:5px">Reset ke default</button>
+</div>
+
+<script>
+if(!localStorage.getItem("password")){
+  localStorage.setItem("password", "1234");
+}
+
+window.onload = function(){
+  if(localStorage.getItem("isLogin")==="true"){ showPanel(); } else { showLogin(); }
+}
+
+function login(){
+  let p=document.getElementById('pass').value;
+  let saved=localStorage.getItem("password");
+  if(document.getElementById('user').value==="admin" && p===saved){
+    localStorage.setItem("isLogin","true");
+    showPanel();
+  } else { alert('Salah!'); }
+}
+function gantiPass(){
+  let oldP=document.getElementById('oldPass').value;
+  let newP=document.getElementById('newPass').value;
+  let saved=localStorage.getItem("password");
+  if(oldP!==saved){ alert('Password lama salah'); return; }
+  if(newP.length<4){ alert('Password baru minimal 4 karakter'); return; }
+  localStorage.setItem("password", newP);
+  alert('Password berhasil diganti!');
+  document.getElementById('oldPass').value="";
+  document.getElementById('newPass').value="";
+}
+function logout(){
+  localStorage.removeItem("isLogin");
+  showLogin();
+}
+function resetAll(){
+  if(confirm('Reset password ke 1234?')){
+    localStorage.setItem("password","1234");
+    localStorage.removeItem("isLogin");
+    showLogin();
+  }
+}
+function showPanel(){
+  document.getElementById('loginBox').classList.add('hidden');
+  document.getElementById('panelBox').classList.remove('hidden');
+}
+function showLogin(){
+  document.getElementById('panelBox').classList.add('hidden');
+  document.getElementById('loginBox').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
